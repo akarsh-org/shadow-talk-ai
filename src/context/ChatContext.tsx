@@ -30,6 +30,7 @@ interface ChatContextType {
   createNewChat: () => void;
   sendMessage: (text: string) => void;
   deleteChat: (chatId: string) => void;
+  updateUserProfile: (updates: Partial<User>) => void;
 }
 
 const defaultUser: User = {
@@ -42,7 +43,7 @@ const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
-  const [user] = useState<User>(defaultUser);
+  const [user, setUser] = useState<User>(defaultUser);
   const [chats, setChats] = useState<Chat[]>([
     {
       id: "1",
@@ -140,6 +141,10 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }, 1000);
   };
 
+  const updateUserProfile = (updates: Partial<User>) => {
+    setUser(prev => ({ ...prev, ...updates }));
+  };
+
   const deleteChat = (chatId: string) => {
     const chatToDelete = chats.find(chat => chat.id === chatId);
     if (!chatToDelete) return;
@@ -167,6 +172,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         createNewChat,
         sendMessage,
         deleteChat,
+        updateUserProfile,
       }}
     >
       {children}

@@ -1,8 +1,9 @@
 
-import { UserCircle } from "lucide-react";
+import { UserCircle, Settings } from "lucide-react";
 import { useChat } from "../../context/ChatContext";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { user } = useChat();
@@ -44,8 +45,11 @@ const Header = () => {
               <p className="text-xs text-muted-foreground">User</p>
             </div>
           </div>
-          <DropdownMenuItem className="cursor-pointer">
-            Profile Settings
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link to="/profile" className="flex items-center">
+              <Settings className="mr-2 h-4 w-4" />
+              Profile Settings
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="cursor-pointer">
             Preferences
