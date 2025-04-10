@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, ReactNode } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -22,15 +23,24 @@ export type User = {
   avatar: string;
 };
 
+export type Preferences = {
+  darkMode: boolean;
+  fontSize: "small" | "medium" | "large";
+  notificationsEnabled: boolean;
+  autocompleteSuggestions: boolean;
+};
+
 interface ChatContextType {
   chats: Chat[];
   currentChat: Chat | null;
   user: User;
+  preferences: Preferences;
   setCurrentChat: (chat: Chat) => void;
   createNewChat: () => void;
   sendMessage: (text: string) => void;
   deleteChat: (chatId: string) => void;
   updateUserProfile: (updates: Partial<User>) => void;
+  updatePreferences: (updates: Partial<Preferences>) => void;
 }
 
 const defaultUser: User = {
@@ -39,11 +49,19 @@ const defaultUser: User = {
   avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=John",
 };
 
+const defaultPreferences: Preferences = {
+  darkMode: false,
+  fontSize: "medium",
+  notificationsEnabled: true,
+  autocompleteSuggestions: true,
+};
+
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
   const { toast } = useToast();
   const [user, setUser] = useState<User>(defaultUser);
+  const [preferences, setPreferences] = useState<Preferences>(defaultPreferences);
   const [chats, setChats] = useState<Chat[]>([
     {
       id: "1",
@@ -145,6 +163,17 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setUser(prev => ({ ...prev, ...updates }));
   };
 
+  const updatePreferences = (updates: Partial<Preferences>) => {
+    setPreferences(prev => {
+      const newPreferences = { ...prev, ...updates };
+      toast({
+        title: "Preferences updated",
+        description: "Your preferences have been saved",
+      });
+      return newPreferences;
+    });
+  };
+
   const deleteChat = (chatId: string) => {
     const chatToDelete = chats.find(chat => chat.id === chatId);
     if (!chatToDelete) return;
@@ -168,11 +197,13 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         chats,
         currentChat,
         user,
+        preferences,
         setCurrentChat,
         createNewChat,
         sendMessage,
         deleteChat,
         updateUserProfile,
+        updatePreferences,
       }}
     >
       {children}

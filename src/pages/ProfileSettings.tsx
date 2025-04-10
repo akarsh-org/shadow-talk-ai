@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useChat } from "../context/ChatContext";
 import { useToast } from "@/hooks/use-toast";
@@ -9,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Camera, UserCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import PreferencesForm from "../components/preferences/PreferencesForm";
 
 const ProfileSettings = () => {
   const { user, updateUserProfile } = useChat();
@@ -105,18 +105,7 @@ const ProfileSettings = () => {
         </form>
       </Card>
       
-      <Card className="glass">
-        <CardHeader>
-          <CardTitle>Preferences</CardTitle>
-          <CardDescription>
-            Customize your chat experience
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Add preference settings here later */}
-          <p className="text-muted-foreground">Preference settings coming soon</p>
-        </CardContent>
-      </Card>
+      <PreferencesForm />
     </div>
   );
 };

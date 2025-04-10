@@ -1,5 +1,5 @@
 
-import { UserCircle, Settings } from "lucide-react";
+import { UserCircle, Settings, Sliders } from "lucide-react";
 import { useChat } from "../../context/ChatContext";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
@@ -51,8 +51,11 @@ const Header = () => {
               Profile Settings
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
-            Preferences
+          <DropdownMenuItem className="cursor-pointer" asChild>
+            <Link to="/profile" className="flex items-center">
+              <Sliders className="mr-2 h-4 w-4" />
+              Preferences
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem className="text-destructive cursor-pointer">
             Log out
