@@ -1,5 +1,5 @@
-
 import { createContext, useContext, useState, ReactNode } from "react";
+import { useToast } from "@/hooks/use-toast";
 
 export type Message = {
   id: string;
@@ -29,6 +29,7 @@ interface ChatContextType {
   setCurrentChat: (chat: Chat) => void;
   createNewChat: () => void;
   sendMessage: (text: string) => void;
+  deleteChat: (chatId: string) => void;
 }
 
 const defaultUser: User = {
@@ -40,6 +41,7 @@ const defaultUser: User = {
 const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
+  const { toast } = useToast();
   const [user] = useState<User>(defaultUser);
   const [chats, setChats] = useState<Chat[]>([
     {
@@ -101,7 +103,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
       timestamp: new Date(),
     };
     
-    // Add user message
     const updatedChat = {
       ...currentChat,
       messages: [...currentChat.messages, userMessage],
@@ -116,7 +117,6 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     setChats(updatedChats);
     setCurrentChat(updatedChat);
     
-    // Simulate AI response after a short delay
     setTimeout(() => {
       const aiResponse: Message = {
         id: `msg-${Date.now() + 1}`,
@@ -140,6 +140,23 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
     }, 1000);
   };
 
+  const deleteChat = (chatId: string) => {
+    const chatToDelete = chats.find(chat => chat.id === chatId);
+    if (!chatToDelete) return;
+
+    const updatedChats = chats.filter(chat => chat.id !== chatId);
+    setChats(updatedChats);
+    
+    if (currentChat && currentChat.id === chatId) {
+      setCurrentChat(updatedChats.length > 0 ? updatedChats[0] : null);
+    }
+
+    toast({
+      title: "Chat deleted",
+      description: `"${chatToDelete.title}" has been removed`,
+    });
+  };
+
   return (
     <ChatContext.Provider
       value={{
@@ -149,6 +166,7 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         setCurrentChat,
         createNewChat,
         sendMessage,
+        deleteChat,
       }}
     >
       {children}

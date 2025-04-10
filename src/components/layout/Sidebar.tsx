@@ -1,13 +1,19 @@
 
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, PlusCircle, Search } from "lucide-react";
+import { ChevronLeft, ChevronRight, PlusCircle, Search, Trash2, MoreVertical } from "lucide-react";
 import { useChat, type Chat } from "../../context/ChatContext";
 import { cn } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Sidebar = () => {
-  const { chats, currentChat, setCurrentChat, createNewChat } = useChat();
+  const { chats, currentChat, setCurrentChat, createNewChat, deleteChat } = useChat();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -69,35 +75,80 @@ const Sidebar = () => {
         {filteredChats.map((chat) => (
           <div 
             key={chat.id}
-            onClick={() => setCurrentChat(chat)}
             className={cn(
-              "cursor-pointer px-4 py-3 hover:bg-sidebar-accent transition-colors",
+              "cursor-pointer px-4 py-3 hover:bg-sidebar-accent transition-colors group",
               currentChat?.id === chat.id && "bg-sidebar-accent/60",
               isCollapsed && "px-2 py-3 text-center"
             )}
           >
-            {isCollapsed ? (
-              <div className="flex justify-center">
-                <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
-                  <span className="text-xs font-bold">{chat.title.charAt(0)}</span>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center">
-                <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
-                  <span className="text-sm font-bold">{chat.title.charAt(0)}</span>
-                </div>
-                <div className="ml-3 flex-1 overflow-hidden">
-                  <div className="flex justify-between">
-                    <p className="font-medium truncate">{chat.title}</p>
-                    <span className="text-xs text-muted-foreground whitespace-nowrap">
-                      {formatDate(chat.lastUpdated)}
-                    </span>
+            <div 
+              className="flex items-center"
+              onClick={() => setCurrentChat(chat)}
+            >
+              {isCollapsed ? (
+                <div className="flex justify-center w-full">
+                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+                    <span className="text-xs font-bold">{chat.title.charAt(0)}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground truncate">
-                    {chat.messages[chat.messages.length - 1]?.text || "No messages yet"}
-                  </p>
                 </div>
+              ) : (
+                <>
+                  <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+                    <span className="text-sm font-bold">{chat.title.charAt(0)}</span>
+                  </div>
+                  <div className="ml-3 flex-1 overflow-hidden">
+                    <div className="flex justify-between">
+                      <p className="font-medium truncate">{chat.title}</p>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        {formatDate(chat.lastUpdated)}
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground truncate">
+                      {chat.messages[chat.messages.length - 1]?.text || "No messages yet"}
+                    </p>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <MoreVertical className="h-4 w-4" />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deleteChat(chat.id);
+                        }}
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        <span>Delete chat</span>
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </>
+              )}
+            </div>
+            {isCollapsed && (
+              <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 rounded-full bg-destructive/10 hover:bg-destructive/20"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    deleteChat(chat.id);
+                  }}
+                >
+                  <Trash2 className="h-3 w-3 text-destructive" />
+                  <span className="sr-only">Delete chat</span>
+                </Button>
               </div>
             )}
           </div>

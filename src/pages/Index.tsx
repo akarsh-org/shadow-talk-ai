@@ -3,6 +3,7 @@ import { ChatProvider } from "../context/ChatContext";
 import Header from "../components/layout/Header";
 import Sidebar from "../components/layout/Sidebar";
 import ChatInterface from "../components/chat/ChatInterface";
+import { Toaster } from "@/components/ui/toaster";
 
 const Index = () => {
   return (
@@ -15,6 +16,7 @@ const Index = () => {
             <ChatInterface />
           </main>
         </div>
+        <Toaster />
       </div>
     </ChatProvider>
   );
