@@ -7,12 +7,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Facebook, Github, Loader2, Mail } from "lucide-react";
+import { useAuth } from "../App"; // Import the auth context correctly
 
 const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { login } = useAuth(); // Use the auth context to get the login function
 
   const handleEmailLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,10 +32,13 @@ const Login = () => {
     // Simulate login process
     setTimeout(() => {
       setLoading(false);
+      // Call the login function from auth context
+      login();
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
+      // Navigate to the home page after successful login
       navigate("/");
     }, 1500);
   };
@@ -44,10 +49,13 @@ const Login = () => {
     // Simulate OAuth login process
     setTimeout(() => {
       setLoading(false);
+      // Call the login function from auth context
+      login();
       toast({
         title: "Login successful",
         description: `Logged in with ${provider}`,
       });
+      // Navigate to the home page after successful login
       navigate("/");
     }, 1500);
   };

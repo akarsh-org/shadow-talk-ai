@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ChatProvider, useChat } from "./context/ChatContext";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProfileSettings from "./pages/ProfileSettings";
@@ -28,6 +28,23 @@ const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   }, [preferences.darkMode]);
   
   return <>{children}</>;
+};
+
+// Auth context and hook
+type AuthContextType = {
+  isAuthenticated: boolean;
+  login: () => void;
+  logout: () => void;
+};
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
 
 // Simple authentication simulation
@@ -60,26 +77,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   
   return <>{children}</>;
 };
-
-// Auth context and hook
-type AuthContextType = {
-  isAuthenticated: boolean;
-  login: () => void;
-  logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
-
-// Import these at the top
-import { createContext, useContext } from "react";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
