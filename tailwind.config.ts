@@ -64,8 +64,8 @@ export default {
           ring: "hsl(var(--sidebar-ring))"
         },
         chat: {
-          user: "#4f46e5",
-          ai: "#27272a",
+          user: "hsl(var(--chat-user))",
+          ai: "hsl(var(--chat-ai))",
           timestamp: "#6b7280",
         },
       },

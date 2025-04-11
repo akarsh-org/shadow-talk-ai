@@ -1,15 +1,21 @@
 
-import { UserCircle, Settings, Sliders, Sun, Moon } from "lucide-react";
+import { UserCircle, Settings, Sliders, Sun, Moon, FileText, LogOut } from "lucide-react";
 import { useChat } from "../../context/ChatContext";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../App"; // Import useAuth
 
 const Header = () => {
   const { user, preferences, updatePreferences } = useChat();
+  const { logout } = useAuth(); // Use logout function
 
   const toggleDarkMode = () => {
     updatePreferences({ darkMode: !preferences.darkMode });
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   return (
@@ -75,7 +81,14 @@ const Header = () => {
                 Preferences
               </Link>
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-destructive cursor-pointer">
+            <DropdownMenuItem className="cursor-pointer" asChild>
+              <Link to="/documents" className="flex items-center">
+                <FileText className="mr-2 h-4 w-4" />
+                Documents
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-destructive cursor-pointer" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
               Log out
             </DropdownMenuItem>
           </DropdownMenuContent>

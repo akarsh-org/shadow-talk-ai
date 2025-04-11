@@ -43,6 +43,9 @@
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 215 29% 15%;
     --sidebar-ring: 224 76% 48%;
+
+    --chat-user: 252 100% 67%;
+    --chat-ai: 217 33% 17%;
   }
 
   .light {
@@ -82,6 +85,9 @@
     --sidebar-accent-foreground: 222 47% 11%;
     --sidebar-border: 214.3 31.8% 91.4%;
     --sidebar-ring: 252 100% 67%;
+
+    --chat-user: 252 100% 67%;
+    --chat-ai: 210 40% 96.1%;
   }
 }
  
@@ -106,10 +112,10 @@
   }
 
   .user-message {
-    @apply message-bubble ml-auto bg-chat-user text-white;
+    @apply message-bubble ml-auto bg-[hsl(var(--chat-user))] text-white;
   }
 
   .ai-message {
-    @apply message-bubble mr-auto bg-chat-ai text-white;
+    @apply message-bubble mr-auto bg-[hsl(var(--chat-ai))] text-foreground;
   }
 }
